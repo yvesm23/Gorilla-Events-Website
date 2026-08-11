@@ -1,0 +1,10 @@
+{
+  "description": "Offers a sleek, responsive platform for discovering and exploring events with interactive cards and customizable dark and light themes for user convenience.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
