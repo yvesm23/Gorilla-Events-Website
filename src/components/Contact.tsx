@@ -1,6 +1,33 @@
 import { useState } from 'react'
 import { Clock3, Mail, MapPin, Phone } from 'lucide-react'
 
+const formEndpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT as string | undefined
+const contactEmail = (import.meta.env.VITE_CONTACT_EMAIL as string | undefined) || 'info@gorillaevents.co.rw'
+
+type FormState = {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  eventType: string
+  eventDate: string
+  venue: string
+  guests: string
+  message: string
+}
+
+const defaultForm: FormState = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  eventType: '',
+  eventDate: '',
+  venue: '',
+  guests: '',
+  message: '',
+}
+
 const eventTypes = [
   'Concert / Music Festival',
   'Corporate Conference',
@@ -13,7 +40,7 @@ const eventTypes = [
   'Other',
 ]
 
-function FacebookIcon() {
+export function FacebookIcon() {
   return (
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
       <path d="M14.5 8.5h2.2V5.2h-2.6c-3.1 0-4.6 1.9-4.6 4.6v2.2H7.5v3.3h2.1V22h3.7v-6.7h2.8l.5-3.3h-3.3V9.9c0-.8.5-1.4 1.2-1.4Z" />
@@ -21,7 +48,7 @@ function FacebookIcon() {
   )
 }
 
-function InstagramIcon() {
+export function InstagramIcon() {
   return (
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="3.5" y="3.5" width="17" height="17" rx="4" />
@@ -31,7 +58,7 @@ function InstagramIcon() {
   )
 }
 
-function YouTubeIcon() {
+export function YouTubeIcon() {
   return (
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
       <path d="M21.6 7.2c-.2-.9-.9-1.6-1.8-1.8C17.9 5 12 5 12 5s-5.9 0-7.8.4C3.3 5.6 2.6 6.3 2.4 7.2 2 9.1 2 12 2 12s0 2.9.4 4.8c.2.9.9 1.6 1.8 1.8C6.1 19 12 19 12 19s5.9 0 7.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.9.4-4.8.4-4.8s0-2.9-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z" />
@@ -39,7 +66,7 @@ function YouTubeIcon() {
   )
 }
 
-function LinkedInIcon() {
+export function LinkedInIcon() {
   return (
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
       <path d="M6.9 8.6A1.9 1.9 0 1 1 6.9 4.8a1.9 1.9 0 0 1 0 3.8ZM5.2 9.8h3.4V19H5.2V9.8Zm5.6 0h3.3v1.3h.1c.5-.9 1.7-1.9 3.4-1.9 3.7 0 4.4 2.4 4.4 5.6V19h-3.4v-17.7c0-1.3-.1-2.9-1.8-2.9-1.8 0-2.1 1.4-2.1 2.8V19h-3.4V9.8Z" />
@@ -48,48 +75,71 @@ function LinkedInIcon() {
 }
 
 export default function Contact() {
-  const temporaryEmail = 'yvesmugenga@gmail.com'
-  const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    eventType: '',
-    eventDate: '',
-    venue: '',
-    guests: '',
-    message: '',
-  })
-  const [sent, setSent] = useState(false)
+  const [form, setForm] = useState<FormState>(defaultForm)
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [feedback, setFeedback] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setStatus('submitting')
+    setFeedback('')
 
-    const subject = encodeURIComponent(`Quote Request: ${form.eventType || 'Event Enquiry'}`)
-    const body = encodeURIComponent(
-      [
-        'New quote request from Gorilla Events website.',
-        '',
-        `First Name: ${form.firstName}`,
-        `Last Name: ${form.lastName}`,
-        `Email: ${form.email}`,
-        `Phone: ${form.phone || 'Not provided'}`,
-        `Event Type: ${form.eventType || 'Not specified'}`,
-        `Event Date: ${form.eventDate || 'Not specified'}`,
-        `Venue / Location: ${form.venue || 'Not specified'}`,
-        `Estimated Guests: ${form.guests || 'Not specified'}`,
-        '',
-        'Message:',
-        form.message || 'No additional message provided.',
-      ].join('\n'),
-    )
+    const subject = `Quote Request: ${form.eventType || 'Event Enquiry'}`
+    const body = [
+      'New quote request from Gorilla Events website.',
+      '',
+      `First Name: ${form.firstName}`,
+      `Last Name: ${form.lastName}`,
+      `Email: ${form.email}`,
+      `Phone: ${form.phone || 'Not provided'}`,
+      `Event Type: ${form.eventType || 'Not specified'}`,
+      `Event Date: ${form.eventDate || 'Not specified'}`,
+      `Venue / Location: ${form.venue || 'Not specified'}`,
+      `Estimated Guests: ${form.guests || 'Not specified'}`,
+      '',
+      'Message:',
+      form.message || 'No additional message provided.',
+    ].join('\n')
 
-    window.location.href = `mailto:${temporaryEmail}?subject=${subject}&body=${body}`
-    setSent(true)
+    try {
+      if (formEndpoint) {
+        const response = await fetch(formEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            firstName: form.firstName,
+            lastName: form.lastName,
+            email: form.email,
+            phone: form.phone,
+            eventType: form.eventType,
+            eventDate: form.eventDate,
+            venue: form.venue,
+            guests: form.guests,
+            message: form.message,
+            _subject: subject,
+          }),
+        })
+
+        if (!response.ok) {
+          throw new Error('We could not submit your request right now.')
+        }
+      } else {
+        window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+      }
+
+      setForm(defaultForm)
+      setStatus('success')
+    } catch (error) {
+      setStatus('error')
+      setFeedback(error instanceof Error ? error.message : 'We could not submit your request right now. Please try again later.')
+    }
   }
 
   return (
@@ -258,7 +308,7 @@ export default function Contact() {
 
           {/* Form */}
           <div>
-            {sent ? (
+            {status === 'success' ? (
               <div
                 style={{
                   borderRadius: 'var(--radius)',
@@ -287,6 +337,23 @@ export default function Contact() {
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
+                {status === 'error' && (
+                  <div
+                    role="alert"
+                    style={{
+                      marginBottom: '1rem',
+                      padding: '0.9rem 1rem',
+                      borderRadius: 8,
+                      background: 'rgba(239, 68, 68, 0.12)',
+                      border: '1px solid rgba(239, 68, 68, 0.25)',
+                      color: 'var(--fg)',
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: '0.9rem',
+                    }}
+                  >
+                    {feedback}
+                  </div>
+                )}
                 <div
                   style={{
                     display: 'grid',
@@ -353,6 +420,7 @@ export default function Contact() {
 
                 <button
                   type="submit"
+                  disabled={status === 'submitting'}
                   style={{
                     width: '100%',
                     fontFamily: "'Barlow Condensed', sans-serif",
@@ -360,13 +428,14 @@ export default function Contact() {
                     fontSize: '1.05rem',
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
-                    background: 'var(--accent)',
+                    background: status === 'submitting' ? 'rgba(245, 158, 11, 0.65)' : 'var(--accent)',
                     color: '#0c0c0c',
                     border: 'none',
                     borderRadius: 8,
                     padding: '0.95rem',
-                    cursor: 'pointer',
+                    cursor: status === 'submitting' ? 'wait' : 'pointer',
                     transition: 'background 0.2s, transform 0.15s',
+                    opacity: status === 'submitting' ? 0.9 : 1,
                   }}
                   onMouseEnter={e => {
                     const el = e.currentTarget
@@ -379,7 +448,7 @@ export default function Contact() {
                     el.style.transform = 'translateY(0)'
                   }}
                 >
-                  Request a Quote
+                  {status === 'submitting' ? 'Sending...' : 'Request a Quote'}
                 </button>
               </form>
             )}

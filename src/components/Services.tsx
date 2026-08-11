@@ -56,14 +56,7 @@ export default function Services() {
           title="Everything You Need for a Successful Event"
           description="From planning to production, Gorilla Events provides complete technical and creative solutions for events of every scale."
         />
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-            gap: '1rem',
-            marginTop: '2rem',
-          }}
-        >
+        <div className="services-grid">
           {services.map((service) => (
             <ServiceCard key={service.title} {...service} />
           ))}

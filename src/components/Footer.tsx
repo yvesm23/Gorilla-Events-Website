@@ -1,4 +1,5 @@
 import Logo from './Logo'
+import { FacebookIcon, InstagramIcon, YouTubeIcon, LinkedInIcon } from './Contact'
 
 interface FooterProps {
   darkMode: boolean
@@ -7,10 +8,10 @@ interface FooterProps {
 const quickLinks = ['Home', 'Services', 'Portfolio', 'About', 'Process', 'Contact']
 const services = ['Sound Systems', 'Lighting', 'LED Screens', 'Staging', 'Photography', 'Videography', 'Event Management']
 const socials = [
-  { name: 'Facebook', href: '#', label: 'f' },
-  { name: 'Instagram', href: '#', label: '◉' },
-  { name: 'YouTube', href: '#', label: '▶' },
-  { name: 'LinkedIn', href: '#', label: 'in' },
+  { name: 'Facebook', href: 'https://www.facebook.com/share/1HYCKsFxcA/?mibextid=wwXIfr', icon: <FacebookIcon /> },
+                  { name: 'Instagram', href: 'https://www.instagram.com/gorilla_events_ltd?igsh=MWg1cjZ4NTMxb2k0aw==', icon: <InstagramIcon /> },
+                  { name: 'YouTube', href: 'http://www.youtube.com/@gorillaeventsltd4761', icon: <YouTubeIcon /> },
+                  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/jean-de-dieu-nsengimana-0b2036379?utm_source=share_via&utm_content=profile&utm_medium=member_ios', icon: <LinkedInIcon /> },
 ]
 
 export default function Footer({ darkMode }: FooterProps) {
@@ -76,7 +77,7 @@ export default function Footer({ darkMode }: FooterProps) {
                     el.style.borderColor = 'rgba(255,255,255,0.08)'
                   }}
                 >
-                  {s.label}
+                  {s.icon}
                 </a>
               ))}
             </div>
@@ -173,8 +174,8 @@ export default function Footer({ darkMode }: FooterProps) {
             </h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {[
-                { label: 'Phone', value: '+250 780 000 000' },
-                { label: 'Email', value: 'info@gorillaevents.rw' },
+                { label: 'Phone', value: '+250 788 423 390' },
+                { label: 'Email', value: 'info@gorillaevents.co.rw' },
                 { label: 'Address', value: 'KG 7 Ave, Kigali, Rwanda' },
               ].map(c => (
                 <div key={c.label}>
