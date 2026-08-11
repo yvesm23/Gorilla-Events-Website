@@ -49,16 +49,25 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="services" className="content-section">
-      <SectionHeading
-        eyebrow="What We Do"
-        title="Everything You Need for a Successful Event"
-        description="From planning to production, Gorilla Events provides complete technical and creative solutions for events of every scale."
-      />
-      <div className="card-grid services-grid">
-        {services.map((service) => (
-          <ServiceCard key={service.title} {...service} />
-        ))}
+    <section id="services" className="content-section" style={{ padding: '7rem 0' }}>
+      <div className="container">
+        <SectionHeading
+          eyebrow="What We Do"
+          title="Everything You Need for a Successful Event"
+          description="From planning to production, Gorilla Events provides complete technical and creative solutions for events of every scale."
+        />
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            gap: '1rem',
+            marginTop: '2rem',
+          }}
+        >
+          {services.map((service) => (
+            <ServiceCard key={service.title} {...service} />
+          ))}
+        </div>
       </div>
     </section>
   )

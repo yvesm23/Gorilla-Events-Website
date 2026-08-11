@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 interface ServiceCardProps {
   icon: React.ReactNode
   title: string
@@ -6,17 +8,24 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ icon, title, description, tags }: ServiceCardProps) {
+  const [hovered, setHovered] = useState(false)
+
   return (
     <article
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       style={{
         borderRadius: 'var(--radius)',
         padding: '1.75rem',
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border)',
-        boxShadow: 'var(--shadow)',
+        background: hovered ? 'var(--bg-elevated)' : 'var(--bg-card)',
+        border: `1px solid ${hovered ? 'var(--accent-border)' : 'var(--border)'}`,
+        boxShadow: hovered ? '0 8px 30px rgba(245,158,11,0.08)' : 'var(--shadow)',
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
+        transition: 'all 0.25s ease',
+        transform: hovered ? 'translateY(-3px)' : 'translateY(0)',
+        cursor: 'default',
       }}
     >
       <div
@@ -24,12 +33,13 @@ export default function ServiceCard({ icon, title, description, tags }: ServiceC
           width: 52,
           height: 52,
           borderRadius: 12,
-          background: 'var(--accent-dim)',
-          border: '1px solid var(--accent-border)',
+          background: hovered ? 'var(--accent)' : 'var(--accent-dim)',
+          border: `1px solid ${hovered ? 'transparent' : 'var(--accent-border)'}`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'var(--accent)',
+          color: hovered ? '#0c0c0c' : 'var(--accent)',
+          transition: 'all 0.25s ease',
         }}
       >
         {icon}
@@ -68,12 +78,13 @@ export default function ServiceCard({ icon, title, description, tags }: ServiceC
             style={{
               padding: '0.4rem 0.7rem',
               borderRadius: 999,
-              background: 'rgba(255,255,255,0.03)',
+              background: hovered ? 'rgba(245, 158, 11, 0.08)' : 'rgba(255,255,255,0.03)',
               border: '1px solid var(--border)',
               color: 'var(--fg-muted)',
               fontSize: '0.72rem',
               letterSpacing: '0.04em',
               textTransform: 'uppercase',
+              transition: 'all 0.25s ease',
             }}
           >
             {tag}

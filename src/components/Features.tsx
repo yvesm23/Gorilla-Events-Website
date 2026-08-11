@@ -1,43 +1,53 @@
 import { useState } from 'react'
+import {
+  BatteryCharging,
+  Clock3,
+  MapPinned,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  Wallet,
+  Zap,
+} from 'lucide-react'
 
 const features = [
   {
-    icon: '⚡',
+    icon: <Zap size={18} />,
     title: 'Fast Setup',
     desc: 'Our experienced crew ensures quick and efficient installations so your event starts on time, every time.',
   },
   {
-    icon: '🎛️',
+    icon: <Sparkles size={18} />,
     title: 'Modern Equipment',
     desc: 'Industry-standard sound, lighting, LED screens, staging, and production gear — always maintained and up to date.',
   },
   {
-    icon: '👷',
+    icon: <Users size={18} />,
     title: 'Professional Technicians',
     desc: 'Highly trained operators dedicated to delivering flawless performances throughout your event.',
   },
   {
-    icon: '🗺️',
+    icon: <MapPinned size={18} />,
     title: 'Nationwide Coverage',
     desc: 'Serving clients throughout Rwanda — from Kigali to every province with full logistical support.',
   },
   {
-    icon: '🕐',
+    icon: <Clock3 size={18} />,
     title: '24/7 Technical Support',
     desc: 'Our team remains fully available before, during, and after every event to handle any situation.',
   },
   {
-    icon: '💰',
+    icon: <Wallet size={18} />,
     title: 'Flexible Pricing',
     desc: 'Tailored packages designed to fit your budget without compromising on quality or execution.',
   },
   {
-    icon: '🛡️',
+    icon: <ShieldCheck size={18} />,
     title: 'Safety Standards',
     desc: 'Every installation follows rigorous professional safety procedures — protecting your guests and crew.',
   },
   {
-    icon: '🔋',
+    icon: <BatteryCharging size={18} />,
     title: 'Reliable Power Backup',
     desc: 'Robust backup power solutions keep your event running smoothly without any interruptions.',
   },
@@ -94,7 +104,7 @@ export default function Features() {
 }
 
 interface FeatureCardProps {
-  icon: string
+  icon: React.ReactNode
   title: string
   desc: string
 }

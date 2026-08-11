@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Clock3, Mail, MapPin, Phone } from 'lucide-react'
 
 const eventTypes = [
   'Concert / Music Festival',
@@ -12,7 +13,42 @@ const eventTypes = [
   'Other',
 ]
 
+function FacebookIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
+      <path d="M14.5 8.5h2.2V5.2h-2.6c-3.1 0-4.6 1.9-4.6 4.6v2.2H7.5v3.3h2.1V22h3.7v-6.7h2.8l.5-3.3h-3.3V9.9c0-.8.5-1.4 1.2-1.4Z" />
+    </svg>
+  )
+}
+
+function InstagramIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
+
+function YouTubeIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
+      <path d="M21.6 7.2c-.2-.9-.9-1.6-1.8-1.8C17.9 5 12 5 12 5s-5.9 0-7.8.4C3.3 5.6 2.6 6.3 2.4 7.2 2 9.1 2 12 2 12s0 2.9.4 4.8c.2.9.9 1.6 1.8 1.8C6.1 19 12 19 12 19s5.9 0 7.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.9.4-4.8.4-4.8s0-2.9-.4-4.8ZM10 15.5v-7l6 3.5-6 3.5Z" />
+    </svg>
+  )
+}
+
+function LinkedInIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
+      <path d="M6.9 8.6A1.9 1.9 0 1 1 6.9 4.8a1.9 1.9 0 0 1 0 3.8ZM5.2 9.8h3.4V19H5.2V9.8Zm5.6 0h3.3v1.3h.1c.5-.9 1.7-1.9 3.4-1.9 3.7 0 4.4 2.4 4.4 5.6V19h-3.4v-17.7c0-1.3-.1-2.9-1.8-2.9-1.8 0-2.1 1.4-2.1 2.8V19h-3.4V9.8Z" />
+    </svg>
+  )
+}
+
 export default function Contact() {
+  const temporaryEmail = 'yvesmugenga@gmail.com'
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -32,6 +68,27 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    const subject = encodeURIComponent(`Quote Request: ${form.eventType || 'Event Enquiry'}`)
+    const body = encodeURIComponent(
+      [
+        'New quote request from Gorilla Events website.',
+        '',
+        `First Name: ${form.firstName}`,
+        `Last Name: ${form.lastName}`,
+        `Email: ${form.email}`,
+        `Phone: ${form.phone || 'Not provided'}`,
+        `Event Type: ${form.eventType || 'Not specified'}`,
+        `Event Date: ${form.eventDate || 'Not specified'}`,
+        `Venue / Location: ${form.venue || 'Not specified'}`,
+        `Estimated Guests: ${form.guests || 'Not specified'}`,
+        '',
+        'Message:',
+        form.message || 'No additional message provided.',
+      ].join('\n'),
+    )
+
+    window.location.href = `mailto:${temporaryEmail}?subject=${subject}&body=${body}`
     setSent(true)
   }
 
@@ -92,72 +149,50 @@ export default function Contact() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <ContactItem
-                icon={
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.45 2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 8.29 8.29l1.16-.97a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                  </svg>
-                }
+                icon={<Phone size={20} />}
                 label="Phone"
-                value="+250 780 000 000"
-                href="tel:+250780000000"
+                value="+250 788 423 390"
+                href="tel:+250 788 423 390"
               />
               <ContactItem
-                icon={
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                    <polyline points="22,6 12,13 2,6"/>
-                  </svg>
-                }
+                icon={<Mail size={20} />}
                 label="Email"
-                value="info@gorillaevents.rw"
-                href="mailto:info@gorillaevents.rw"
+                value="info@gorillaevents.co.rw"
+                href="mailto:info@gorillaevents.co.rw"
               />
               <ContactItem
-                icon={
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                    <circle cx="12" cy="10" r="3"/>
-                  </svg>
-                }
+                icon={<MapPin size={20} />}
                 label="Office Location"
                 value="KG 7 Ave, Kigali, Rwanda"
               />
               <ContactItem
-                icon={
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <polyline points="12 6 12 12 16 14"/>
-                  </svg>
-                }
+                icon={<Clock3 size={20} />}
                 label="Business Hours"
                 value="Mon – Sat: 8:00 AM – 7:00 PM"
               />
             </div>
 
-            {/* Map placeholder */}
+            {/* Map */}
             <div
               style={{
                 marginTop: '2.5rem',
                 borderRadius: 'var(--radius)',
                 overflow: 'hidden',
-                height: 200,
+                height: 220,
                 background: 'var(--bg-elevated)',
                 border: '1px solid var(--border)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: '0.5rem',
-                color: 'var(--fg-muted)',
+                boxShadow: '0 18px 38px rgba(0, 0, 0, 0.12)',
               }}
             >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-              <span style={{ fontFamily: "'Inter', sans-serif", fontSize: '0.85rem' }}>
-                Kigali, Rwanda
-              </span>
+              <iframe
+                title="Gorilla Events location in Kigali"
+                src="https://www.google.com/maps?q=KG%207%20Ave,%20Kigali,%20Rwanda&z=15&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
 
             {/* Social links */}
@@ -177,14 +212,16 @@ export default function Contact() {
               </div>
               <div style={{ display: 'flex', gap: '0.75rem' }}>
                 {[
-                  { name: 'Facebook', href: '#', icon: 'f' },
-                  { name: 'Instagram', href: '#', icon: '◉' },
-                  { name: 'YouTube', href: '#', icon: '▶' },
-                  { name: 'LinkedIn', href: '#', icon: 'in' },
+                  { name: 'Facebook', href: 'https://www.facebook.com/share/1HYCKsFxcA/?mibextid=wwXIfr', icon: <FacebookIcon /> },
+                  { name: 'Instagram', href: 'https://www.instagram.com/gorilla_events_ltd?igsh=MWg1cjZ4NTMxb2k0aw==', icon: <InstagramIcon /> },
+                  { name: 'YouTube', href: 'http://www.youtube.com/@gorillaeventsltd4761', icon: <YouTubeIcon /> },
+                  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/jean-de-dieu-nsengimana-0b2036379?utm_source=share_via&utm_content=profile&utm_medium=member_ios', icon: <LinkedInIcon /> },
                 ].map(s => (
                   <a
                     key={s.name}
                     href={s.href}
+                    target="_blank"
+                    rel="noreferrer"
                     aria-label={s.name}
                     style={{
                       width: 40,
@@ -195,9 +232,6 @@ export default function Contact() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      fontFamily: "'Inter', sans-serif",
-                      fontWeight: 700,
-                      fontSize: '0.85rem',
                       color: 'var(--fg-muted)',
                       textDecoration: 'none',
                       transition: 'background 0.2s, color 0.2s, border-color 0.2s',
