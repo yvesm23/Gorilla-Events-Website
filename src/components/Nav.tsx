@@ -20,30 +20,25 @@ const links = [
 export default function Nav({ darkMode, toggleTheme }: NavProps) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [activeHref, setActiveHref] = useState('#home')
+  const [activeHref, setActiveHref] = useState(() =>
+    links.some(link => link.href === window.location.hash) ? window.location.hash : '#home',
+  )
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40)
-
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
-        setActiveHref('#contact')
-        return
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    const onHashChange = () => {
+      if (links.some(link => link.href === window.location.hash)) {
+        setActiveHref(window.location.hash)
       }
-
-      const activeSection = links
-        .map(link => document.getElementById(link.href.slice(1)))
-        .filter((section): section is HTMLElement => section !== null)
-        .filter(section => section.getBoundingClientRect().top <= 100)
-        .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top)
-        .at(-1)
-
-      if (activeSection) setActiveHref(`#${activeSection.id}`)
     }
 
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    window.addEventListener('hashchange', onHashChange)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('hashchange', onHashChange)
+    }
   }, [])
 
   const navBg = scrolled
@@ -70,7 +65,7 @@ export default function Nav({ darkMode, toggleTheme }: NavProps) {
       >
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 72 }}>
           {/* Logo */}
-          <a href="#home" style={{ textDecoration: 'none' }}>
+          <a href="#home" onClick={() => setActiveHref('#home')} style={{ textDecoration: 'none' }}>
             <Logo darkMode={darkMode} compact />
           </a>
 
@@ -82,6 +77,7 @@ export default function Nav({ darkMode, toggleTheme }: NavProps) {
                 <a
                   key={l.href}
                   href={l.href}
+                  onClick={() => setActiveHref(l.href)}
                   aria-current={isActive ? 'location' : undefined}
                   style={{
                     fontFamily: "'Inter', sans-serif",
@@ -128,6 +124,7 @@ export default function Nav({ darkMode, toggleTheme }: NavProps) {
             {/* CTA */}
             <a
               href="#contact"
+              onClick={() => setActiveHref('#contact')}
               className="hidden-mobile"
               style={{
                 fontFamily: "'Barlow Condensed', sans-serif",
@@ -203,7 +200,10 @@ export default function Nav({ darkMode, toggleTheme }: NavProps) {
           <a
             key={l.href}
             href={l.href}
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {
+              setActiveHref(l.href)
+              setMenuOpen(false)
+            }}
             style={{
               fontFamily: "'Barlow Condensed', sans-serif",
               fontWeight: 700,
@@ -222,7 +222,10 @@ export default function Nav({ darkMode, toggleTheme }: NavProps) {
         ))}
         <a
           href="#contact"
-          onClick={() => setMenuOpen(false)}
+          onClick={() => {
+            setActiveHref('#contact')
+            setMenuOpen(false)
+          }}
           style={{
             fontFamily: "'Barlow Condensed', sans-serif",
             fontWeight: 700,
