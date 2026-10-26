@@ -20,9 +20,28 @@ const links = [
 export default function Nav({ darkMode, toggleTheme }: NavProps) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeHref, setActiveHref] = useState('#home')
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40)
+
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        setActiveHref('#contact')
+        return
+      }
+
+      const activeSection = links
+        .map(link => document.getElementById(link.href.slice(1)))
+        .filter((section): section is HTMLElement => section !== null)
+        .filter(section => section.getBoundingClientRect().top <= 100)
+        .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top)
+        .at(-1)
+
+      if (activeSection) setActiveHref(`#${activeSection.id}`)
+    }
+
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -57,25 +76,29 @@ export default function Nav({ darkMode, toggleTheme }: NavProps) {
 
           {/* Desktop Links */}
           <nav style={{ display: 'flex', gap: '2rem', alignItems: 'center' }} className="hidden-mobile">
-            {links.map(l => (
-              <a
-                key={l.href}
-                href={l.href}
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontWeight: 500,
-                  fontSize: '0.875rem',
-                  color: 'var(--fg-muted)',
-                  textDecoration: 'none',
-                  letterSpacing: '0.02em',
-                  transition: 'color 0.2s',
-                }}
-                onMouseEnter={e => ((e.target as HTMLElement).style.color = 'var(--fg)')}
-                onMouseLeave={e => ((e.target as HTMLElement).style.color = 'var(--fg-muted)')}
-              >
-                {l.label}
-              </a>
-            ))}
+            {links.map(l => {
+              const isActive = activeHref === l.href
+              return (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  aria-current={isActive ? 'location' : undefined}
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontWeight: 500,
+                    fontSize: '0.875rem',
+                    color: isActive ? 'var(--accent)' : 'var(--fg-muted)',
+                    textDecoration: 'none',
+                    letterSpacing: '0.02em',
+                    padding: '8px 0',
+                    borderBottom: `2px solid ${isActive ? 'var(--accent)' : 'transparent'}`,
+                    transition: 'color 0.2s, border-color 0.2s',
+                  }}
+                >
+                  {l.label}
+                </a>
+              )
+            })}
           </nav>
 
           {/* Actions */}
@@ -187,10 +210,10 @@ export default function Nav({ darkMode, toggleTheme }: NavProps) {
               fontSize: '2rem',
               letterSpacing: '0.05em',
               textTransform: 'uppercase',
-              color: 'var(--fg)',
+              color: activeHref === l.href ? 'var(--accent)' : 'var(--fg)',
               textDecoration: 'none',
               padding: '0.6rem 0',
-              borderBottom: '1px solid var(--border)',
+              borderBottom: `1px solid ${activeHref === l.href ? 'var(--accent)' : 'var(--border)'}`,
               transition: 'color 0.2s',
             }}
           >
